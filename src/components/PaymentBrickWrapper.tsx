@@ -19,6 +19,7 @@ interface PaymentBrickWrapperProps {
   };
   description?: string;
   externalReference?: string;
+  statementDescriptor?: string;
 }
 
 const PaymentBrickWrapper = ({
@@ -26,6 +27,7 @@ const PaymentBrickWrapper = ({
   payer,
   description,
   externalReference,
+  statementDescriptor,
 }: PaymentBrickWrapperProps) => {
   const [isReady, setIsReady] = useState(false);
 
@@ -55,13 +57,22 @@ const PaymentBrickWrapper = ({
 
   const onSubmit = useCallback(
     async ({ selectedPaymentMethod, formData }: any) => {
+      console.log("Payment Brick onSubmit:", {
+        selectedPaymentMethod,
+        formData,
+      });
+
+      // Process payment
       try {
-        // Add description and external_reference to formData
         const paymentData = {
           ...formData,
-          description: description || "Payment description",
-          external_reference: externalReference || `ORDER-${Date.now()}`,
+          description: description || "Payment",
+          installments: 1,
+          external_reference: externalReference,
+          statement_descriptor: statementDescriptor,
         };
+
+        console.log("Sending payment data:", paymentData);
 
         const response = await fetch("/api/process-payment", {
           method: "POST",
@@ -71,23 +82,37 @@ const PaymentBrickWrapper = ({
           body: JSON.stringify(paymentData),
         });
 
-        const data = await response.json();
+        const result = await response.json();
+        console.log("Payment processing result:", result);
 
-        if (response.ok) {
-          paymentId.value = data.id;
-          paymentStatus.value = data.status;
+        if (result.id) {
+          paymentId.value = result.id;
+          paymentStatus.value = result.status;
 
-          if (data.status_detail === "pending_challenge") {
-            threeDSInfo.value = data.three_ds_info;
+          // Only create UUID if payment is approved
+          if (result.status === "approved") {
+            console.log("Payment approved - creating order UUID");
+            const { createOrder, submitOrderToBackend } = await import(
+              "../store/checkoutStore"
+            );
+            const uuid = createOrder();
+            console.log("Order UUID created:", uuid);
+            await submitOrderToBackend(uuid);
           }
 
+          // Handle 3DS authentication
+          if (result.three_ds_info) {
+            console.log("3DS authentication required", result.three_ds_info);
+            threeDSInfo.value = result.three_ds_info;
+          }
+
+          // Move to status step
           currentStep.value = "status";
         } else {
-          console.error("Payment failed", data);
-          // Handle error (show alert, etc.)
+          console.error("Payment failed:", result);
         }
       } catch (error) {
-        console.error("Error submitting payment", error);
+        console.error("Error processing payment:", error);
       }
     },
     [description, externalReference],
@@ -113,13 +138,15 @@ const PaymentBrickWrapper = ({
   }, []);
 
   return (
-    <Payment
-      initialization={initialization}
-      customization={customization}
-      onSubmit={onSubmit}
-      onReady={onReady}
-      onError={onError}
-    />
+    <div className="relative min-h-[700px] w-full">
+      <Payment
+        initialization={initialization}
+        customization={customization}
+        onSubmit={onSubmit}
+        onReady={onReady}
+        onError={onError}
+      />
+    </div>
   );
 };
 

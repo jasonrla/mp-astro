@@ -1,0 +1,29 @@
+
+> mp-gravity@0.0.1 dev
+> astro dev --port 4322
+
+10:15:26 [@astrojs/netlify] Enabling sessions with Netlify Blobs
+10:15:27 [vite] Environment loaded
+10:15:27 [vite] Middleware loaded. Emulating features: blobs, edgeFunctions, functions, geolocation, headers, images, redirects, static.
+10:15:27 [vite] 💭 Linking this project to a Netlify site lets you deploy your site, use any environment variables defined on your team and site and much more. Run [96mnpx netlify init[39m to get started.
+10:15:27 [types] Generated 0ms
+10:15:27 [content] Syncing content
+10:15:27 [content] Astro config changed
+10:15:27 [content] Clearing content store
+10:15:27 [content] Synced content
+
+ astro  v5.16.0 ready in 1079 ms
+
+┃ Local    http://localhost:4322/
+┃ Network  use --host to expose
+
+10:15:27 watching for file changes...
+10:15:29 [200] /checkout 27ms
+10:15:54 [200] /checkout 5ms
+10:16:14 [ERROR] Unexpected "catch"
+  Stack trace:
+    at /Users/jasonrla/Documents/Projects/mp-gravity/src/pages/api/process-payment.ts:84:4
+    [...] See full stack trace in the browser, or rerun with --verbose.
+10:19:06 [watch] src/pages/api/process-payment.ts
+10:19:06 [watch] src/pages/api/process-payment.ts
+10:19:08 [200] /checkout 15ms

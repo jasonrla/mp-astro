@@ -1,6 +1,8 @@
 import type { APIRoute } from "astro";
 import { MercadoPagoConfig, Payment } from "mercadopago";
 
+export const prerender = false;
+
 const client = new MercadoPagoConfig({
   accessToken: import.meta.env.MERCADO_PAGO_ACCESS_TOKEN,
 });
@@ -8,26 +10,11 @@ const payment = new Payment(client);
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const rawBody = await request.text();
-
-    if (!rawBody) {
-      throw new Error("Empty request body");
-    }
-
-    const body = JSON.parse(rawBody);
-    const {
-      transaction_amount,
-      token,
-      description,
-      installments,
-      payment_method_id,
-      issuer_id,
-      payer,
-      external_reference,
-    } = body;
+    const body = await request.json();
+    console.log("Received payment data:", body);
 
     // Validate required fields
-    if (!transaction_amount || !token || !payment_method_id || !payer) {
+    if (!body.token || !body.transaction_amount || !body.payment_method_id) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
         {
@@ -37,43 +24,53 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Generate Idempotency Key (UUID v4)
-    // In a real scenario, this might come from the client or be generated here to prevent double processing
-    // if the client retries the same request.
+    // Prepare payment data for Mercado Pago
+    const paymentData = {
+      token: body.token,
+      transaction_amount: Number(body.transaction_amount),
+      payment_method_id: body.payment_method_id,
+      payer: {
+        email: body.payer?.email || body.email,
+        identification: body.payer?.identification,
+      },
+      description: body.description || "Payment",
+      installments: Number(body.installments) || 1,
+      three_d_secure_mode: "optional", // Enable 3DS authentication
+      statement_descriptor: body.statement_descriptor,
+      external_reference: body.external_reference || `${Date.now()}`,
+      metadata: body.metadata || {},
+    };
+
+    console.log("Sending to Mercado Pago:", paymentData);
+
+    // Generate idempotency key to prevent duplicate payments
     const idempotencyKey = crypto.randomUUID();
 
-    const paymentData = {
-      transaction_amount,
-      token,
-      description: description || "Payment description",
-      installments,
-      payment_method_id,
-      issuer_id,
-      payer: {
-        email: payer.email,
-        identification: payer.identification,
-      },
-      three_d_secure_mode: "optional", // Requirement 4
-      statement_descriptor: "CRAZZULA",
-      external_reference: external_reference || `ORDER-${Date.now()}`, // Unique order reference
-    };
-
     const requestOptions = {
-      idempotencyKey, // Requirement 3
+      idempotencyKey: idempotencyKey,
     };
 
-    const result = await payment.create({ body: paymentData, requestOptions });
+    // Process payment with Mercado Pago SDK
+    const result = await payment.create({
+      body: paymentData,
+      requestOptions: requestOptions,
+    });
 
+    console.log("Mercado Pago response:", result);
+
+    // Return payment result to frontend
+    // UUID will be created in frontend when status is "approved"
     return new Response(JSON.stringify(result), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (error: any) {
-    console.error("Payment error:", error);
+    console.error("Payment processing error:", error);
     return new Response(
       JSON.stringify({
-        error: error.message || "Internal Server Error",
-        details: error,
+        error: "Internal server error",
+        details: error.message || "Unknown error",
+        cause: error.cause || [],
       }),
       {
         status: 500,
