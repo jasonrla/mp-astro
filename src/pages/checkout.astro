@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PaymentFlow from "../components/PaymentFlow";
+---
+
+<Layout title="Mercado Pago Checkout">
+  <main
+    class="flex min-h-screen items-center justify-center bg-white p-3 md:p-6"
+  >
+    <!-- <div class="w-full max-w-3xl"> -->
+    <PaymentFlow
+      client:only="react"
+      amount={100}
+      payer={{ email: "test@test.com" }}
+      description="Compra en tienda online"
+      externalReference="12345"
+    />
+    <!-- </div> -->
+  </main>
+</Layout>
