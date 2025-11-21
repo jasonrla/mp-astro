@@ -13,7 +13,6 @@ export const POST: APIRoute = async ({ request }) => {
     const body = await request.json();
     console.log("Received payment data:", body);
 
-    // Validate required fields
     if (!body.token || !body.transaction_amount || !body.payment_method_id) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
@@ -24,7 +23,6 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Prepare payment data for Mercado Pago
     const paymentData = {
       token: body.token,
       transaction_amount: Number(body.transaction_amount),
@@ -43,14 +41,12 @@ export const POST: APIRoute = async ({ request }) => {
 
     console.log("Sending to Mercado Pago:", paymentData);
 
-    // Generate idempotency key to prevent duplicate payments
     const idempotencyKey = crypto.randomUUID();
 
     const requestOptions = {
       idempotencyKey: idempotencyKey,
     };
 
-    // Process payment with Mercado Pago SDK
     const result = await payment.create({
       body: paymentData,
       requestOptions: requestOptions,
@@ -58,8 +54,6 @@ export const POST: APIRoute = async ({ request }) => {
 
     console.log("Mercado Pago response:", result);
 
-    // Return payment result to frontend
-    // UUID will be created in frontend when status is "approved"
     return new Response(JSON.stringify(result), {
       status: 200,
       headers: { "Content-Type": "application/json" },

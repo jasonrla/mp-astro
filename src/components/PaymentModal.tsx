@@ -27,15 +27,14 @@ const PaymentModal = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
+
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={closePaymentModal}
       />
 
-      {/* Modal */}
       <div className="relative z-10 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white shadow-2xl">
-        {/* Close button */}
+
         <button
           onClick={closePaymentModal}
           className="absolute top-4 right-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition-colors hover:bg-gray-200"
@@ -56,7 +55,6 @@ const PaymentModal = () => {
           </svg>
         </button>
 
-        {/* Payment Flow */}
         <div className="p-6">
           <PaymentFlow
             amount={total.value}

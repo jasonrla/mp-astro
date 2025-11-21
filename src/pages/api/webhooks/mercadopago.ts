@@ -10,29 +10,19 @@ export const POST: APIRoute = async ({ request }) => {
       data: body.data,
     });
 
-    // Validate webhook signature (recommended for production)
-    // const signature = request.headers.get("x-signature");
-    // const requestId = request.headers.get("x-request-id");
-    // TODO: Implement signature validation
-
-    // Handle different event types
     switch (body.type) {
       case "payment":
         console.log("Payment event:", body.data.id);
-        // TODO: Fetch payment details from Mercado Pago API
-        // TODO: Update order status in database
         break;
 
       case "merchant_order":
         console.log("Merchant order event:", body.data.id);
-        // TODO: Handle merchant order updates
         break;
 
       default:
         console.log("Unknown event type:", body.type);
     }
 
-    // Return 200 to acknowledge receipt
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
       headers: {

@@ -28,7 +28,6 @@ const CheckoutWizard = () => {
     checkoutData.value.zipCode;
 
   const handleProceedToPayment = () => {
-    // Open payment modal (stay on /checkout)
     openPaymentModal();
   };
 

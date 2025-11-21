@@ -122,14 +122,11 @@ const StatusScreenBrickWrapper = () => {
         console.log("Poll result:", result);
 
         if (result.status !== "pending") {
-          // Status changed - update and stop polling
           console.log("Payment status changed to:", result.status);
           paymentStatus.value = result.status;
 
-          // Clear 3DS info since flow is complete
           threeDSInfo.value = null;
 
-          // Create UUID if approved
           if (result.status === "approved") {
             console.log("Payment approved - creating order UUID");
             const { createOrder, submitOrderToBackend } = await import(
@@ -142,7 +139,6 @@ const StatusScreenBrickWrapper = () => {
 
           clearInterval(pollInterval);
         } else if (pollCount >= maxPolls) {
-          // Max polls reached - stop polling
           console.log("Max polling attempts reached");
           clearInterval(pollInterval);
         }
@@ -157,7 +153,6 @@ const StatusScreenBrickWrapper = () => {
     };
   }, [isReady, paymentId.value, paymentStatus.value]);
 
-  // Cleanup: Unmount Status Screen Brick when component unmounts
   useEffect(() => {
     return () => {
       console.log("Unmounting Status Screen Brick");
@@ -170,7 +165,7 @@ const StatusScreenBrickWrapper = () => {
   return (
     <div className="relative min-h-[600px] w-full">
       <StatusScreen
-        key={`${paymentId.value}-${threeDSInfo.value ? "3ds" : "std"}`} // Force remount when 3DS info arrives
+        key={`${paymentId.value}-${threeDSInfo.value ? "3ds" : "std"}`}
         initialization={initialization}
         customization={customization}
         onReady={onReady}

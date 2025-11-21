@@ -88,10 +88,8 @@ export const cart = signal<Product[]>([
 
 export const checkoutStep = signal<CheckoutStep>("personal");
 
-// Initialize checkoutData from localStorage
 export const checkoutData = signal<CheckoutData>(loadCheckoutDataFromStorage());
 
-// Sync checkoutData to localStorage whenever it changes
 if (typeof window !== "undefined") {
   effect(() => {
     saveCheckoutDataToStorage(checkoutData.value);
@@ -105,17 +103,13 @@ export const subtotal = computed(() =>
 export const discount = computed(() => subtotal.value * 0.1); // 10% discount
 export const total = computed(() => subtotal.value - discount.value);
 
-// Order ID for SEO-friendly URLs
 export const orderId = signal<string | null>(null);
 
-// Payment modal state
 export const isPaymentModalOpen = signal<boolean>(false);
 
-// Payment completion state
 export const paymentCompleted = signal<boolean>(false);
 export const trackingCode = signal<string | null>(null);
 
-// Generate a simple UUID
 const generateUUID = () => {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
@@ -127,10 +121,9 @@ const generateUUID = () => {
 export const createOrder = () => {
   const uuid = generateUUID();
   orderId.value = uuid;
-  // Generate tracking code
+
   trackingCode.value = `TRK-${Date.now().toString().slice(-8)}`;
 
-  // Save to "valid orders" mock DB in localStorage
   if (typeof window !== "undefined") {
     try {
       const validOrders = JSON.parse(

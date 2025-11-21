@@ -7,7 +7,7 @@ import {
   threeDSInfo,
 } from "../store/paymentStore";
 
-// Initialize Mercado Pago with your public key
+
 initMercadoPago(import.meta.env.PUBLIC_MERCADO_PAGO_PUBLIC_KEY, {
   locale: "es-PE",
 });
@@ -62,7 +62,6 @@ const PaymentBrickWrapper = ({
         formData,
       });
 
-      // Process payment
       try {
         const paymentData = {
           ...formData,
@@ -89,7 +88,6 @@ const PaymentBrickWrapper = ({
           paymentId.value = result.id;
           paymentStatus.value = result.status;
 
-          // Only create UUID if payment is approved
           if (result.status === "approved") {
             console.log("Payment approved - creating order UUID");
             const { createOrder, submitOrderToBackend } = await import(
@@ -100,13 +98,11 @@ const PaymentBrickWrapper = ({
             await submitOrderToBackend(uuid);
           }
 
-          // Handle 3DS authentication
           if (result.three_ds_info) {
             console.log("3DS authentication required", result.three_ds_info);
             threeDSInfo.value = result.three_ds_info;
           }
 
-          // Move to status step
           currentStep.value = "status";
         } else {
           console.error("Payment failed:", result);
@@ -127,7 +123,6 @@ const PaymentBrickWrapper = ({
     setIsReady(true);
   }, []);
 
-  // Cleanup: Unmount Payment Brick when component unmounts
   useEffect(() => {
     return () => {
       console.log("Unmounting Payment Brick");

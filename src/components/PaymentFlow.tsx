@@ -23,32 +23,14 @@ const PaymentFlow = ({
 }: PaymentFlowProps) => {
   useSignals();
 
-  // Prevent accidental page exit during payment
-  //   React.useEffect(() => {
-  //     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-  //       // Only show warning during payment step
-  //       if (currentStep.value === "payment") {
-  //         e.preventDefault();
-  //         e.returnValue = ""; // Chrome requires returnValue to be set
-  //         return "¿Estás seguro de que deseas salir? Se perderán los datos de tu compra.";
-  //       }
-  //     };
-
-  //     window.addEventListener("beforeunload", handleBeforeUnload);
-
-  //     return () => {
-  //       window.removeEventListener("beforeunload", handleBeforeUnload);
-  //     };
-  //   }, []);
-
   return (
     <div className="w-full">
-      {/* Main Content Card */}
+
       <div className="min-h-[850px] overflow-hidden rounded-lg bg-white shadow-lg">
         {currentStep.value === "payment" ? (
           <>
             <div className="p-4 md:p-6">
-              {/* Header */}
+
               <div className="mb-4 flex flex-col gap-3 border-b border-gray-200 pb-3 md:mb-6 md:flex-row md:items-center md:justify-between md:gap-0 md:pb-4">
                 <div className="flex-1">
                   <h1 className="text-xl font-bold text-gray-900 md:text-2xl">
@@ -57,7 +39,7 @@ const PaymentFlow = ({
                   <p className="mt-1 text-xs text-gray-500 md:text-sm">
                     Completa tu pago de forma segura.
                   </p>
-                  {/* Amount Display */}
+
                   <div className="mt-2 flex items-baseline gap-2 md:mt-3">
                     <span className="text-xs text-gray-500 md:text-sm">
                       Total a pagar:
@@ -85,7 +67,7 @@ const PaymentFlow = ({
                 </div>
               </div>
 
-              {/* Payment Brick */}
+
               <div className="mt-4 md:mt-6">
                 <PaymentBrickWrapper
                   amount={amount}
@@ -98,14 +80,14 @@ const PaymentFlow = ({
             </div>
           </>
         ) : (
-          /* Status Brick */
+
           <div className="flex h-full w-full flex-col items-center justify-center p-4 pt-8 md:p-6">
             <StatusScreenBrickWrapper />
           </div>
         )}
       </div>
 
-      {/* Footer Info */}
+
       <div className="mt-3 text-center md:mt-4">
         <p className="text-xs text-gray-400 md:text-sm">
           Protegido por Mercado Pago • Todos los datos están encriptados

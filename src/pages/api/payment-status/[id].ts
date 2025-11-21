@@ -21,11 +21,9 @@ export const GET: APIRoute = async ({ params }) => {
 
     console.log("Checking payment status for ID:", paymentId);
 
-    // Fetch payment status from Mercado Pago SDK
     const result = await payment.get({ id: paymentId });
     console.log("Payment status response:", result);
 
-    // Return payment status
     return new Response(
       JSON.stringify({
         id: result.id,

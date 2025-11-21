@@ -7,7 +7,7 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
     const {
-      id, // UUID created on frontend
+      id,
       trackingCode,
       customer,
       items,
@@ -19,14 +19,13 @@ export const POST: APIRoute = async ({ request }) => {
     console.log("Creating order in Supabase:", id);
     console.log("Request body:", JSON.stringify(body, null, 2));
 
-    // 1. Insert into orders table
     const { error: orderError } = await supabase.from("orders").insert({
       id: id,
       tracking_code: trackingCode,
       customer_name: `${customer.firstName} ${customer.lastName}`,
       customer_email: customer.email,
       customer_phone: customer.phone,
-      shipping_address: customer.address, // Assuming address is the full string for now
+      shipping_address: customer.address,
       shipping_place_id: null, // customer.zipCode is not a UUID, so sending null
       // shipping_coords: null, // Not available in current checkout data
       // shipping_coords_url: null,
@@ -47,10 +46,9 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    // 2. Insert into order_items table
     const orderItems = items.map((item: any) => ({
       order_id: id,
-      product_id: item.id, // Assuming item.id is UUID or string
+      product_id: item.id,
       // variant_id: null,
       product_name: item.name,
       product_image: item.image,

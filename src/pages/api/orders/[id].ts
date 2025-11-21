@@ -13,7 +13,6 @@ export const GET: APIRoute = async ({ params }) => {
   }
 
   try {
-    // Fetch order
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .select("*")
@@ -27,7 +26,6 @@ export const GET: APIRoute = async ({ params }) => {
       });
     }
 
-    // Fetch items
     const { data: items, error: itemsError } = await supabase
       .from("order_items")
       .select("*")
@@ -41,7 +39,6 @@ export const GET: APIRoute = async ({ params }) => {
       );
     }
 
-    // Format response to match frontend expectations
     const formattedOrder = {
       id: order.id,
       trackingCode: order.tracking_code,
