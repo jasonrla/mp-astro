@@ -9,9 +9,9 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/deno": "^5.0.1",
     "@astrojs/node": "^9.5.1",
     "@astrojs/react": "^4.4.2",
+    "@astrojs/vercel": "^9.0.1",
     "@mercadopago/sdk-react": "^1.0.6",
     "@preact/signals-react": "^3.6.1",
     "@supabase/supabase-js": "^2.84.0",

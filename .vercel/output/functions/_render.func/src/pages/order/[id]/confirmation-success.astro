@@ -1,0 +1,27 @@
+---
+export const prerender = false;
+
+import Layout from "../../../layouts/Layout.astro";
+import OrderConfirmation from "../../../components/OrderConfirmation";
+
+const { id } = Astro.params;
+---
+
+<Layout title={`Confirmación - Orden ${id}`}>
+  <main class="min-h-screen bg-gray-50 py-8">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="mb-8 text-center">
+        <h1 class="text-2xl font-bold text-gray-900">¡Pago exitoso!</h1>
+        <p class="mt-1 text-sm text-gray-600">
+          Orden #{id?.slice(0, 8)}
+        </p>
+      </div>
+
+      <!-- Confirmation Content -->
+      <div class="mx-auto max-w-3xl">
+        <OrderConfirmation client:only="react" orderId={id} />
+      </div>
+    </div>
+  </main>
+</Layout>
