@@ -13,6 +13,8 @@ export default defineConfig({
   adapter: node({
     mode: "standalone",
   }),
+  output: "static",
+  adapter: "@astrojs/netlify",
   integrations: [react()],
 
   vite: {
