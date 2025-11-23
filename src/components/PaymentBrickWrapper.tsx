@@ -7,7 +7,6 @@ import {
   threeDSInfo,
 } from "../store/paymentStore";
 
-
 initMercadoPago(import.meta.env.PUBLIC_MERCADO_PAGO_PUBLIC_KEY, {
   locale: "es-PE",
 });
@@ -16,6 +15,12 @@ interface PaymentBrickWrapperProps {
   amount: number;
   payer: {
     email: string;
+    firstName?: string;
+    lastName?: string;
+    identification?: {
+      type: string;
+      number: string;
+    };
   };
   description?: string;
   externalReference?: string;
@@ -36,6 +41,12 @@ const PaymentBrickWrapper = ({
       amount: amount,
       payer: {
         email: payer.email,
+        firstName: payer.firstName || "Usuario",
+        lastName: payer.lastName || "Prueba",
+        identification: {
+          type: "DNI",
+          number: payer.identification?.number || "11111111",
+        },
       },
     }),
     [amount, payer],
@@ -51,6 +62,9 @@ const PaymentBrickWrapper = ({
         mercadoPago: "all",
         maxInstallments: 1,
       } as any,
+      visual: {
+        hideFormTitle: true,
+      },
     }),
     [],
   );

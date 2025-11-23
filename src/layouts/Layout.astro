@@ -5,6 +5,8 @@ interface Props {
 
 const { title } = Astro.props;
 import "../styles/global.css";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 ---
 
 <!doctype html>
@@ -16,8 +18,16 @@ import "../styles/global.css";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gotu&family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
+    <Header client:load />
     <slot />
+    <Footer client:visible />
   </body>
 </html>

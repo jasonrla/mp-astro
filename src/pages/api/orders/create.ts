@@ -63,10 +63,16 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (itemsError) {
       console.error("Error inserting order items:", itemsError);
-      // Note: In a real app we might want to rollback the order creation here
-      return new Response(JSON.stringify({ error: itemsError.message }), {
-        status: 500,
-      });
+
+      await supabase.from("orders").delete().eq("id", id);
+
+      return new Response(
+        JSON.stringify({
+          error: "Failed to create order items",
+          details: itemsError.message,
+        }),
+        { status: 500 },
+      );
     }
 
     return new Response(

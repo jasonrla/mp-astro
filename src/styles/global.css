@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+@theme {
+  --font-heading: "Gotu", sans-serif;
+  --font-body: "Lato", sans-serif;
+}
+
+@layer components {
+  .gradient-button {
+    @apply bg-gradient-to-r from-purple-400 to-pink-400 text-white transition-all duration-300 hover:from-purple-500 hover:to-pink-500;
+  }
+  .gradient-background {
+    @apply bg-gradient-to-r from-purple-400 to-pink-400 text-white;
+  }
+  .glass-effect {
+    @apply border-b border-white/30 bg-white/60 shadow-[0_4px_30px_rgba(0,0,0,0.03)] backdrop-blur-xl;
+  }
+}

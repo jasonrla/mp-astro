@@ -1,11 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import CheckoutWizard from "../components/CheckoutWizard";
+import Cart from "../components/Cart";
 import OrderSummary from "../components/OrderSummary";
-import PaymentModal from "../components/PaymentModal";
 ---
 
-<Layout title="Checkout - Mercado Pago">
+<Layout title="Carrito de Compras - Mercado Pago">
   <main
     class="font-body min-h-screen bg-gradient-to-r from-[#fffbf0] to-[#fff0f5] py-8"
   >
@@ -14,16 +13,13 @@ import PaymentModal from "../components/PaymentModal";
         <h1
           class="font-heading text-start text-lg font-bold text-gray-900 uppercase md:text-2xl"
         >
-          Checkout
+          Tu Carrito
         </h1>
-        <!-- <p class="mt-2 text-sm text-gray-600">
-          Completa tu compra de forma segura
-        </p> -->
       </div>
 
       <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div class="lg:col-span-2">
-          <CheckoutWizard client:only="react" />
+          <Cart client:only="react" />
         </div>
 
         <div class="lg:col-span-1">
@@ -33,7 +29,5 @@ import PaymentModal from "../components/PaymentModal";
         </div>
       </div>
     </div>
-    <!-- Payment Modal -->
-    <PaymentModal client:only="react" />
   </main>
 </Layout>
